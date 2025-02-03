@@ -65,7 +65,7 @@ export default function ForceDirectedGraph() {
 
     svg.append("text")
       .attr("x", 0)
-      .attr("y", 30)
+      .attr("y", height - 20)
       .attr("font-size", "24px")
       .attr("fill", "#000000")
       .text(`Nodes: ${nodes.length}, Connections: ${links.length}`);
@@ -102,10 +102,10 @@ export default function ForceDirectedGraph() {
 
   return (
     <div className="flex flex-col items-center p-4">
+      <svg ref={svgRef}></svg>
       <button onClick={addNode} className="mb-4 self-start">
         Add Node
       </button>
-      <svg ref={svgRef}></svg>
     </div>
   );
 }
