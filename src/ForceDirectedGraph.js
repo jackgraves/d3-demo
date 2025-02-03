@@ -11,7 +11,7 @@ export default function ForceDirectedGraph() {
 
   useEffect(() => {
     const width = 800;
-    const height = 600;
+    const height = 500;
     const svg = d3
       .select(svgRef.current)
       .attr("width", width)
