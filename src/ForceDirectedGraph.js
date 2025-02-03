@@ -78,7 +78,7 @@ export default function ForceDirectedGraph() {
 
     svg.append("text")
       .attr("x", 10)
-      .attr("y", height - 20)
+      .attr("y", 20)
       .attr("font-size", "16px")
       .attr("fill", "#000000")
       .text(`Nodes: ${nodes.length}, Connections: ${newLinks.length}`);
@@ -114,12 +114,12 @@ export default function ForceDirectedGraph() {
   }, [nodes, isSpokeMode]);
 
   return (
-    <div className="flex flex-col items-start p-4">
-      <svg ref={svgRef}></svg>
-      <div className="mt-4 space-x-2">
+    <div className="flex flex-col items-start">
+     <div className="mt-2 space-x-2 p-2">
         <button onClick={addNode}>Add Node</button>
         <button onClick={switchMode}>{isSpokeMode ? "Switch to Full Mesh" : "Switch to Spoke"}</button>
       </div>
+      <svg ref={svgRef}></svg>
     </div>
   );
 }
