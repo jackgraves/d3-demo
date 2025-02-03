@@ -3,10 +3,16 @@ import * as d3 from "d3";
 
 export default function ForceDirectedGraph() {
   const [nodes, setNodes] = useState([{ id: 0 }]);
+  const [links, setLinks] = useState([]);
+  const [isSpokeMode, setIsSpokeMode] = useState(false);
   const svgRef = useRef(null);
 
   const addNode = () => {
     setNodes((prevNodes) => [...prevNodes, { id: prevNodes.length }]);
+  };
+
+  const switchMode = () => {
+    setIsSpokeMode((prevMode) => !prevMode);
   };
 
   useEffect(() => {
@@ -20,20 +26,27 @@ export default function ForceDirectedGraph() {
 
     svg.selectAll("*").remove();
 
-    const links = nodes.flatMap((source, i) =>
-      nodes.slice(i + 1).map((target) => ({ source: source.id, target: target.id }))
-    );
+    let newLinks;
+    if (isSpokeMode) {
+      newLinks = nodes.slice(1).map((node) => ({ source: 0, target: node.id }));
+    } else {
+      newLinks = nodes.flatMap((source, i) =>
+        nodes.slice(i + 1).map((target) => ({ source: source.id, target: target.id }))
+      );
+    }
+    setLinks(newLinks);
 
     const simulation = d3
       .forceSimulation(nodes)
       .force(
         "link",
-        d3.forceLink(links)
+        d3.forceLink(newLinks)
           .id((d) => d.id)
           .distance(100)
       )
-      .force("charge", d3.forceManyBody().strength(-200))
-      .force("center", d3.forceCenter(width / 2, height / 2))
+      .force("charge", d3.forceManyBody().strength(-300))
+      .force("x", d3.forceX(width / 2).strength(0.1))
+      .force("y", d3.forceY(height / 2).strength(0.1))
       .on("tick", ticked);
 
     const link = svg
@@ -41,7 +54,7 @@ export default function ForceDirectedGraph() {
       .attr("stroke", "#000000")
       .attr("stroke-opacity", 0.6)
       .selectAll("line")
-      .data(links)
+      .data(newLinks)
       .enter()
       .append("line")
       .attr("stroke-width", 2);
@@ -64,11 +77,11 @@ export default function ForceDirectedGraph() {
       );
 
     svg.append("text")
-      .attr("x", 0)
+      .attr("x", 10)
       .attr("y", height - 20)
-      .attr("font-size", "24px")
+      .attr("font-size", "16px")
       .attr("fill", "#000000")
-      .text(`Nodes: ${nodes.length}, Connections: ${links.length}`);
+      .text(`Nodes: ${nodes.length}, Connections: ${newLinks.length}`);
 
     function ticked() {
       link
@@ -98,14 +111,15 @@ export default function ForceDirectedGraph() {
     }
 
     return () => simulation.stop();
-  }, [nodes]);
+  }, [nodes, isSpokeMode]);
 
   return (
-    <div className="flex flex-col items-center p-4">
+    <div className="flex flex-col items-start p-4">
       <svg ref={svgRef}></svg>
-      <button onClick={addNode} className="mb-4 self-start">
-        Add Node
-      </button>
+      <div className="mt-4 space-x-2">
+        <button onClick={addNode}>Add Node</button>
+        <button onClick={switchMode}>{isSpokeMode ? "Switch to Full Mesh" : "Switch to Spoke"}</button>
+      </div>
     </div>
   );
 }
