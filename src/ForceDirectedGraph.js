@@ -64,7 +64,7 @@ export default function ForceDirectedGraph() {
       );
 
     svg.append("text")
-      .attr("x", width - 150)
+      .attr("x", 0)
       .attr("y", 30)
       .attr("font-size", "24px")
       .attr("fill", "#000000")
