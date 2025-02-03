@@ -16,24 +16,21 @@ export default function ForceDirectedGraph() {
       .select(svgRef.current)
       .attr("width", width)
       .attr("height", height)
-      .style("background", "#1e293b");
+      .style("background", "#ffffff");
 
     svg.selectAll("*").remove();
 
     const links = nodes.flatMap((source, i) =>
-      nodes
-        .slice(i + 1)
-        .map((target) => ({ source: source.id, target: target.id })),
+      nodes.slice(i + 1).map((target) => ({ source: source.id, target: target.id }))
     );
 
     const simulation = d3
       .forceSimulation(nodes)
       .force(
         "link",
-        d3
-          .forceLink(links)
+        d3.forceLink(links)
           .id((d) => d.id)
-          .distance(100),
+          .distance(100)
       )
       .force("charge", d3.forceManyBody().strength(-200))
       .force("center", d3.forceCenter(width / 2, height / 2))
@@ -41,7 +38,7 @@ export default function ForceDirectedGraph() {
 
     const link = svg
       .append("g")
-      .attr("stroke", "#94a3b8")
+      .attr("stroke", "#000000")
       .attr("stroke-opacity", 0.6)
       .selectAll("line")
       .data(links)
@@ -51,21 +48,27 @@ export default function ForceDirectedGraph() {
 
     const node = svg
       .append("g")
-      .attr("stroke", "#fff")
+      .attr("stroke", "#000000")
       .attr("stroke-width", 1.5)
       .selectAll("circle")
       .data(nodes)
       .enter()
       .append("circle")
       .attr("r", 10)
-      .attr("fill", "#38bdf8")
+      .attr("fill", "#1d4ed8")
       .call(
-        d3
-          .drag()
+        d3.drag()
           .on("start", dragstarted)
           .on("drag", dragged)
-          .on("end", dragended),
+          .on("end", dragended)
       );
+
+    svg.append("text")
+      .attr("x", width - 150)
+      .attr("y", 30)
+      .attr("font-size", "24px")
+      .attr("fill", "#000000")
+      .text(`Nodes: ${nodes.length}, Connections: ${links.length}`);
 
     function ticked() {
       link
@@ -99,7 +102,7 @@ export default function ForceDirectedGraph() {
 
   return (
     <div className="flex flex-col items-center p-4">
-      <button onClick={addNode} className="mb-4">
+      <button onClick={addNode} className="mb-4 self-start">
         Add Node
       </button>
       <svg ref={svgRef}></svg>
