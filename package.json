@@ -1,5 +1,5 @@
 {
-  "name": "force-directed-graph",
+  "name": "d3-demo",
   "version": "1.0.0",
   "private": true,
   "dependencies": {
@@ -14,5 +14,5 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://<your-github-username>.github.io/force-directed-graph"
+  "homepage": "https://jackgraves.github.io/d3-demo"
 }
